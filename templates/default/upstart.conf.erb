@@ -1,0 +1,33 @@
+# tablesnap
+
+description "Start the tablesnap daemon"
+author "Mike Heffner <mike@librato.com>"
+
+start on runlevel [2345]
+stop on runlevel [!2345]
+
+# Automatically restart process if crashed
+respawn
+
+# Run before process
+pre-start script
+    [ -d <%= @logdir %> ] || mkdir -p <%= @logdir %>
+end script
+
+script
+    if [ -r /etc/default/tablesnap ]; then
+        . /etc/default/tablesnap
+    else
+        exit 1
+    fi
+
+    OPTS="-k $AMAZON_ACCESS_KEY_ID -s $AMAZON_SECRET_ACCESS_KEY"
+
+    [ -n "$S3_PREFIX" ] && OPTS="$OPTS -p $S3_PREFIX"
+    [ -n "$NODE_NAME" ] && OPTS="$OPTS -n $NODE_NAME"
+    [ -n "$BACKUP" ] && OPTS="$OPTS -B"
+
+    OPTS="$OPTS $BUCKET $SST_PATHS"
+
+    exec ionice -c 2 -n 5 <%= @daemon %> $OPTS >> <%= @logdir %>/tablesnap.log 2>&1
+end script
