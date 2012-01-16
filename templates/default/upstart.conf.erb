@@ -11,7 +11,7 @@ respawn
 
 # Run before process
 pre-start script
-    [ -d <%= @logdir %> ] || mkdir -p <%= @logdir %>
+    mkdir -p <%= @logdir %>
 end script
 
 script
