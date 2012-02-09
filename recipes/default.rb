@@ -19,7 +19,17 @@ git "/opt/tablesnap" do
 end
 
 package "python-pyinotify"
-package "python-boto"
+package "python-pip"
+
+# Get boto dependency from pip (apt version is too old)
+bash "install_python_boto" do
+  user "root"
+
+  code <<EOH
+pip install boto
+EOH
+  not_if "pip freeze | egrep ^boto"
+end
 
 #
 # XXX: Tablesnap does not build correctly. Need to fix debian support.
