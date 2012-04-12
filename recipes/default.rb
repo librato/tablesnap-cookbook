@@ -50,6 +50,11 @@ end
 #   source "/tmp/tablesnap_#{version}_all.deb"
 # end
 
+# We need the latest from pip that includes multi-part support
+execute "upgrade boto" do
+  command "pip install --upgrade boto"
+end
+
 template "/etc/init/tablesnap.conf" do
   source "upstart.conf.erb"
   variables(:logdir => node[:tablesnap][:logdir],
