@@ -25,6 +25,7 @@ script
 
     [ -n "$S3_PREFIX" ] && OPTS="$OPTS -p $S3_PREFIX"
     [ -n "$NODE_NAME" ] && OPTS="$OPTS -n $NODE_NAME"
+    [ -n "$RECURSIVE" ] && OPTS="$OPTS -r"
 
     OPTS="$OPTS $BUCKET $SST_PATHS"
 
