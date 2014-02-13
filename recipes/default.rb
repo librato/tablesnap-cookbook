@@ -10,11 +10,12 @@
 include_recipe "build-essential"
 include_recipe "git"
 
+branch = node[:tablesnap][:branch]
 version = node[:tablesnap][:version]
 
 git "/opt/tablesnap" do
   repository node[:tablesnap][:repo]
-  revision "v#{version}"
+  revision (branch || "v#{version}")
   action :sync
 end
 
